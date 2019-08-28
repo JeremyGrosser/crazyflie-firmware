@@ -34,26 +34,12 @@ package body LEDS is
    ---------------
 
    procedure LEDS_Init is
-      Configuration : GPIO_Port_Configuration;
    begin
       if Is_Initialized then
          return;
       end if;
 
-      Enable_Clock (GPIO_D);
-      Enable_Clock (GPIO_C);
-
-      Configuration.Mode        := Mode_Out;
-      Configuration.Output_Type := Push_Pull;
-      Configuration.Speed       := Speed_100MHz;
-      Configuration.Resistors   := Floating;
-
-      Configure_IO (Port => GPIO_D,
-                    Pin  => LEDs_Pins (LED_Blue_L),
-                    Config => Configuration);
-      Configure_IO (Port => GPIO_C,
-                    Pins => Red_And_Green_LEDs_Pins,
-                    Config => Configuration);
+      Initialize_LEDs;
 
       Reset_All_LEDs;
 
@@ -74,46 +60,18 @@ package body LEDS is
    -------------
 
    procedure Set_LED (LED : Crazyflie_LED; Value : Boolean) is
-      Set_Value : constant Boolean
-        := (if LEDS_Polarity (LED) then Value else not Value);
+       This : Crazyflie_LED := LED;
    begin
-      if Set_Value then
-         if LED = LED_Blue_L then
-            Set (GPIO_D, LEDs_Pins (LED));
-         else
-            Set (GPIO_C, LEDs_Pins (LED));
-         end if;
+      if Value then
+          Turn_On (This);
       else
-         if LED = LED_Blue_L then
-            Clear (GPIO_D, LEDs_Pins (LED));
-         else
-            Clear (GPIO_C, LEDs_Pins (LED));
-         end if;
+          Turn_Off (This);
       end if;
    end Set_LED;
 
-   ----------------
-   -- Toggle_LED --
-   ----------------
-
-   procedure Toggle_LED (LED : Crazyflie_LED) is
-   begin
-      if LED = LED_Blue_L then
-         Toggle (GPIO_D, LEDs_Pins (LED));
-      else
-         Toggle (GPIO_C, LEDs_Pins (LED));
-      end if;
-   end Toggle_LED;
-
-   --------------------
-   -- Reset_All_LEDs --
-   --------------------
-
    procedure Reset_All_LEDs is
    begin
-      for LED in Crazyflie_LED loop
-         Set_LED (LED, False);
-      end loop;
+       All_LEDs_Off;
    end Reset_All_LEDs;
 
    -----------------------

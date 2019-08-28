@@ -70,7 +70,7 @@ package body UART_Syslink is
          Tx_Stream,
          Source      => Source_Block'Address,
          Destination => Data_Register_Address (Transceiver),
-         Data_Count  => Half_Word (Data_Size));
+         Data_Count  => Data_Size);
       --  also enables the stream
 
       Enable_DMA_Transmit_Requests (Transceiver);

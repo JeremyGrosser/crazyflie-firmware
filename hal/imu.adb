@@ -29,7 +29,9 @@
 
 with Ada.Numerics.Elementary_Functions; use Ada.Numerics.Elementary_Functions;
 
+with STM32.Board;                       use STM32.Board;
 with Config;                            use Config;
+with Interfaces;                        use Interfaces;
 
 package body IMU
 with Refined_State => (IMU_State => (Is_Init,
@@ -62,33 +64,33 @@ is
          return;
       end if;
 
-      MPU9250_Init;
-      MPU9250_Reset;
+      MPU9250_Init (MPU_Device);
+      MPU9250_Reset (MPU_Device);
 
       --  Wait 50 ms after a reset has been performed
       Delay_After_Reset_Time := Clock + Milliseconds (50);
       delay until Delay_After_Reset_Time;
 
       --  Activate MPU9250
-      MPU9250_Set_Sleep_Enabled (False);
+      MPU9250_Set_Sleep_Enabled (MPU_Device, False);
       --  Enable temp sensor
-      MPU9250_Set_Temp_Sensor_Enabled (True);
+      MPU9250_Set_Temp_Sensor_Enabled (MPU_Device, True);
       --  Disable interrupts
-      MPU9250_Set_Int_Enabled (False);
+      MPU9250_Set_Int_Enabled (MPU_Device, False);
       --  Connect the HMC5883L to the main I2C bus
-      MPU9250_Set_I2C_Bypass_Enabled (True);
+      MPU9250_Set_I2C_Bypass_Enabled (MPU_Device, True);
       --  Set x-axis gyro as clock source
-      MPU9250_Set_Clock_Source (X_Gyro_Clk);
+      MPU9250_Set_Clock_Source (MPU_Device, X_Gyro_Clk);
       --  Set gyro full-scale range
-      MPU9250_Set_Full_Scale_Gyro_Range (IMU_GYRO_FS_CONFIG);
+      MPU9250_Set_Full_Scale_Gyro_Range (MPU_Device, IMU_GYRO_FS_CONFIG);
       --  Set accel full-scale range
-      MPU9250_Set_Full_Scale_Accel_Range (IMU_ACCEL_FS_CONFIG);
+      MPU9250_Set_Full_Scale_Accel_Range (MPU_Device, IMU_ACCEL_FS_CONFIG);
       --  To low DLPF bandwidth might cause instability and decrease agility
       --  but it works well for handling vibrations and unbalanced propellers
       --  Set output rate (1): 1000 / (1 + 1) = 500Hz
-      MPU9250_Set_Rate (1);
+      MPU9250_Set_Rate (MPU_Device, 1);
       --  Set digital low-pass bandwidth
-      MPU9250_Set_DLPF_Mode (MPU9250_DLPF_BW_98);
+      MPU9250_Set_DLPF_Mode (MPU_Device, MPU9250_DLPF_BW_98);
 
       Variance_Sample_Time := Time_First;
       IMU_Acc_Lp_Att_Factor := IMU_ACC_IIR_LPF_ATT_FACTOR;
@@ -104,14 +106,22 @@ is
    --------------
    -- IMU_Test --
    --------------
+   
+   procedure IMU_Test_Reporter (Msg : String; Has_Succeeded : out Boolean) is
+   begin
+       null;
+   end IMU_Test_Reporter;
 
    function IMU_Test return Boolean is
       Is_Connected     : Boolean;
       Self_Test_Passed : Boolean;
    begin
       --  TODO: implement the complete function
-      Is_Connected := MPU9250_Test_Connection;
-      Self_Test_Passed := MPU9250_Self_Test;
+      Is_Connected := MPU9250_Test_Connection (MPU_Device);
+      Self_Test_Passed := MPU9250_Self_Test (
+          Device    => MPU_Device,
+          Do_Report => False,
+          Reporter  => IMU_Test_Reporter'Access);
 
       return Is_Init and Is_Connected and Self_Test_Passed;
    end IMU_Test;
@@ -127,7 +137,7 @@ is
       Pitch, Roll : T_Degrees;
       Start_Time  : Time;
    begin
-      Test_Status := MPU9250_Self_Test;
+      Test_Status := MPU9250_Self_Test (MPU_Device, False, IMU_Test_Reporter'Access);
       Start_Time := Clock;
 
       if Test_Status then
@@ -187,8 +197,8 @@ is
       Has_Found_Bias : Boolean;
    begin
       --  We invert X and Y because the chip is almso inverted.
-      MPU9250_Get_Motion_6 (Accel_IMU.Y, Accel_IMU.X, Accel_IMU.Z,
-                            Gyro_IMU.Y, Gyro_IMU.X, Gyro_IMU.Z);
+      MPU9250_Get_Motion_6 (MPU_Device, Accel_IMU.X, Accel_IMU.Y, Accel_IMU.Z,
+                            Gyro_IMU.X, Gyro_IMU.Y, Gyro_IMU.Z);
       IMU_Add_Bias_Value (Gyro_Bias, Gyro_IMU);
 
       if not Gyro_Bias.Is_Bias_Value_Found then

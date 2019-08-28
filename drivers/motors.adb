@@ -46,54 +46,50 @@ is
    procedure Motors_Init is
    begin
       --  Initialize the pwm modulators
-      Initialise_PWM_Modulator
-        (This                   => M1_Modulator,
-         Requested_Frequency    => MOTORS_PWM_FREQUENCY,
-         PWM_Timer              => MOTORS_TIMER_M1'Access,
-         PWM_AF                 => MOTORS_GPIO_AF_M1,
-         Enable_PWM_Timer_Clock => MOTORS_TIM_ENABLE_M1);
+      Configure_PWM_Timer
+        (Generator              => MOTORS_TIMER_M1'Access,
+         Frequency              => MOTORS_PWM_FREQUENCY);
 
-      Initialise_PWM_Modulator
-        (This                   => M2_Modulator,
-         Requested_Frequency    => MOTORS_PWM_FREQUENCY,
-         PWM_Timer              => MOTORS_TIMER_M2'Access,
-         PWM_AF                 => MOTORS_GPIO_AF_M2,
-         Enable_PWM_Timer_Clock => MOTORS_TIM_ENABLE_M2);
+      Configure_PWM_Timer
+        (Generator              => MOTORS_TIMER_M2'Access,
+         Frequency              => MOTORS_PWM_FREQUENCY);
 
-      Initialise_PWM_Modulator
-        (This                   => M3_Modulator,
-         Requested_Frequency    => MOTORS_PWM_FREQUENCY,
-         PWM_Timer              => MOTORS_TIMER_M3'Access,
-         PWM_AF                 => MOTORS_GPIO_AF_M3,
-         Enable_PWM_Timer_Clock => MOTORS_TIM_ENABLE_M3);
+      Configure_PWM_Timer
+        (Generator              => MOTORS_TIMER_M3'Access,
+         Frequency              => MOTORS_PWM_FREQUENCY);
 
-      Initialise_PWM_Modulator
-        (This                   => M4_Modulator,
-         Requested_Frequency    => MOTORS_PWM_FREQUENCY,
-         PWM_Timer              => MOTORS_TIMER_M4'Access,
-         PWM_AF                 => MOTORS_GPIO_AF_M4,
-         Enable_PWM_Timer_Clock => MOTORS_TIM_ENABLE_M4);
+      Configure_PWM_Timer
+        (Generator              => MOTORS_TIMER_M4'Access,
+         Frequency              => MOTORS_PWM_FREQUENCY);
 
       --  Attach the PWM modulators to the corresponding channels
-      Attach_PWM_Channel (This                   => M1_Modulator,
-                          Channel                => MOTORS_TIM_CHANNEL_M1,
-                          Point                  => MOTORS_GPIO_M1_POINT,
-                          Enable_GPIO_Port_Clock => MOTORS_GPIO_ENABLE_M1);
+      Attach_PWM_Channel
+        (This                   => M1_Modulator,
+         Generator              => MOTORS_TIMER_M1'Access,
+         Channel                => MOTORS_TIM_CHANNEL_M1,
+         Point                  => MOTORS_GPIO_M1_POINT,
+         PWM_AF                 => MOTORS_GPIO_AF_M1);
 
-      Attach_PWM_Channel (This                   => M2_Modulator,
-                          Channel                => MOTORS_TIM_CHANNEL_M2,
-                          Point                  => MOTORS_GPIO_M2_POINT,
-                          Enable_GPIO_Port_Clock => MOTORS_GPIO_ENABLE_M2);
+      Attach_PWM_Channel
+        (This                   => M2_Modulator,
+         Generator              => MOTORS_TIMER_M2'Access,
+         Channel                => MOTORS_TIM_CHANNEL_M2,
+         Point                  => MOTORS_GPIO_M2_POINT,
+         PWM_AF                 => MOTORS_GPIO_AF_M2);
 
-      Attach_PWM_Channel (This                   => M3_Modulator,
-                          Channel                => MOTORS_TIM_CHANNEL_M3,
-                          Point                  => MOTORS_GPIO_M3_POINT,
-                          Enable_GPIO_Port_Clock => MOTORS_GPIO_ENABLE_M3);
+      Attach_PWM_Channel
+        (This                   => M3_Modulator,
+         Generator              => MOTORS_TIMER_M3'Access,
+         Channel                => MOTORS_TIM_CHANNEL_M3,
+         Point                  => MOTORS_GPIO_M3_POINT,
+         PWM_AF                 => MOTORS_GPIO_AF_M3);
 
-      Attach_PWM_Channel (This                   => M4_Modulator,
-                          Channel                => MOTORS_TIM_CHANNEL_M4,
-                          Point                  => MOTORS_GPIO_M4_POINT,
-                          Enable_GPIO_Port_Clock => MOTORS_GPIO_ENABLE_M4);
+      Attach_PWM_Channel
+        (This                   => M4_Modulator,
+         Generator              => MOTORS_TIMER_M4'Access,
+         Channel                => MOTORS_TIM_CHANNEL_M4,
+         Point                  => MOTORS_GPIO_M4_POINT,
+         PWM_AF                 => MOTORS_GPIO_AF_M4);
 
       --  Reset all the motors power to zero
       Motors_Reset;

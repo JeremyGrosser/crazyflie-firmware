@@ -32,6 +32,7 @@ with Config;        use Config;
 with LEDS;          use LEDS;
 with Syslink;       use Syslink;
 with Types;         use Types;
+with STM32.Board;   use STM32.Board;
 
 package Power_Management
   with Abstract_State => (Power_Management_State)

@@ -38,6 +38,7 @@ with Motors;           use Motors;
 with Power_Management; use Power_Management;
 with Stabilizer;       use Stabilizer;
 with Types;            use Types;
+with STM32.Board;      use STM32.Board;
 
 package body Crazyflie_System is
 
