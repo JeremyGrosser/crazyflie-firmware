@@ -80,7 +80,7 @@ private
    --  Global variables and constants
 
    --  Constants used to configure PWM.
-   MOTORS_PWM_FREQUENCY : constant := 328_000.0; --  328 KHz
+   MOTORS_PWM_FREQUENCY : constant := 328_000; --  328 KHz
    MOTORS_PWM_PRESCALE  : constant := 0;
 
    --  Constants used for testing.

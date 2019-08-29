@@ -115,19 +115,15 @@ is
       case ID is
          when MOTOR_M1 =>
             Set_Duty_Cycle (This     => M1_Modulator,
-                            Channel  => MOTORS_TIM_CHANNEL_M1,
                             Value    => Power_Percentage);
          when MOTOR_M2 =>
             Set_Duty_Cycle (This     => M2_Modulator,
-                            Channel  => MOTORS_TIM_CHANNEL_M2,
                             Value    => Power_Percentage);
          when MOTOR_M3 =>
             Set_Duty_Cycle (This     => M3_Modulator,
-                            Channel  => MOTORS_TIM_CHANNEL_M3,
                             Value    => Power_Percentage);
          when MOTOR_M4 =>
             Set_Duty_Cycle (This     => M4_Modulator,
-                            Channel  => MOTORS_TIM_CHANNEL_M4,
                             Value    => Power_Percentage);
       end case;
    end Motor_Set_Power;
@@ -157,19 +153,15 @@ is
       case ID is
          when MOTOR_M1 =>
             Set_Duty_Cycle (This     => M1_Modulator,
-                            Channel  => MOTORS_TIM_CHANNEL_M1,
                             Value    => Power_Percentage);
          when MOTOR_M2 =>
             Set_Duty_Cycle (This     => M2_Modulator,
-                            Channel  => MOTORS_TIM_CHANNEL_M2,
                             Value    => Power_Percentage);
          when MOTOR_M3 =>
             Set_Duty_Cycle (This     => M3_Modulator,
-                            Channel  => MOTORS_TIM_CHANNEL_M3,
                             Value    => Power_Percentage);
          when MOTOR_M4 =>
             Set_Duty_Cycle (This     => M4_Modulator,
-                            Channel  => MOTORS_TIM_CHANNEL_M4,
                             Value    => Power_Percentage);
       end case;
    end Motor_Set_Power_With_Bat_Compensation;
