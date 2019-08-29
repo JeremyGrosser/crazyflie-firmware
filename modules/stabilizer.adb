@@ -28,9 +28,8 @@
 ------------------------------------------------------------------------------
 
 with Config;           use Config;
-with Power_Management; use Power_Management;
-with Motors;           use Motors;
 with Safety;           use Safety;
+with Interfaces;       use Interfaces;
 
 package body Stabilizer
 with SPARK_Mode,

@@ -33,7 +33,6 @@ with STM32.GPIO;        use STM32.GPIO;
 with STM32;             use STM32;
 with STM32.PWM;         use STM32.PWM;
 with STM32.Timers;      use STM32.Timers;
-with STM32.RCC;         use STM32.RCC;
 with STM32.Device;      use STM32.Device;
 
 package Motors

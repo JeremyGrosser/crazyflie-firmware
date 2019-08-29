@@ -136,9 +136,9 @@ is
      (ID : Motor_ID;
       Motor_Power : T_Uint16)
    is
-      Tmp_Thrust         : Float
+      Tmp_Thrust         : constant Float
         := (Float (Motor_Power) / Float (T_Uint16'Last)) * 60.0;
-      Volts              : Float
+      Volts              : constant Float
         := -0.0006239 * Tmp_Thrust * Tmp_Thrust + 0.088 * Tmp_Thrust;
       Supply_Voltage     : Float;
       Power_Percentage_F : Float;
