@@ -27,6 +27,8 @@
 --  covered by the  GNU Public License.                                     --
 ------------------------------------------------------------------------------
 
+with HAL;   use HAL;
+
 package body UART_Syslink is
 
    --  Public procedures and functions
@@ -70,7 +72,7 @@ package body UART_Syslink is
          Tx_Stream,
          Source      => Source_Block'Address,
          Destination => Data_Register_Address (Transceiver),
-         Data_Count  => Data_Size);
+         Data_Count  => UInt16 (Data_Size));
       --  also enables the stream
 
       Enable_DMA_Transmit_Requests (Transceiver);
@@ -85,25 +87,25 @@ package body UART_Syslink is
    ----------------------
 
    procedure Initialize_USART is
-      Configuration : GPIO_Port_Configuration;
+      --Configuration : GPIO_Port_Configuration;
    begin
       Enable_Clock (Transceiver);
       Enable_Clock (IO_Port);
 
-      Configuration.Mode := Mode_AF;
-      Configuration.Speed := Speed_50MHz;
-      Configuration.Output_Type := Push_Pull;
-      Configuration.Resistors := Pull_Up;
+      --Configuration.Mode := Mode_AF;
+      --Configuration.Speed := Speed_50MHz;
+      --Configuration.Output_Type := Push_Pull;
+      --Configuration.Resistors := Pull_Up;
 
-      Configure_IO
-        (Port => IO_Port,
-         Pins => RX_Pin & TX_Pin,
-         Config => Configuration);
+      --Configure_IO
+      --  (Port => IO_Port,
+      --   Pins => RX_Pin & TX_Pin,
+      --   Config => Configuration);
 
-      Configure_Alternate_Function
-        (Port => IO_Port,
-         Pins => RX_Pin & TX_Pin,
-         AF   => Transceiver_AF);
+      --Configure_Alternate_Function
+      --  (Port => IO_Port,
+      --   Pins => RX_Pin & TX_Pin,
+      --   AF   => Transceiver_AF);
    end Initialize_USART;
 
    ---------------------
@@ -318,8 +320,7 @@ package body UART_Syslink is
          Received_Byte : T_Uint8;
       begin
          if Status (Transceiver, Read_Data_Register_Not_Empty) then
-            Received_Byte :=
-              Half_Word_To_T_Uint8 (Current_Input (Transceiver) and 16#FF#);
+            Received_Byte := T_Uint8 (Current_Input (Transceiver) and 16#FF#);
             Clear_Status (Transceiver, Read_Data_Register_Not_Empty);
             Enqueue (Rx_Queue, Received_Byte);
             Byte_Avalaible := True;
